@@ -1,4 +1,5 @@
-# Copy this file to configs/rois.local.yaml and fill it with reviewed ROIs.
+# Copy this file to configs/rois.local.yaml as the aggregate fallback. Store
+# reviewed session-specific annotations in configs/rois/<session_id>.yaml.
 # This file is intentionally a shape-only template: it contains no experiment data.
 schema_version: 1
 sessions:
