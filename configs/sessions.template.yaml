@@ -60,6 +60,7 @@ behavior:
   max_manual_pupil_anchors: 100
   manual_anchor_influence_frames: 60
   roi_config_file: rois.local.yaml
+  roi_session_dir: rois
 
 # Add only the sessions the collaborator is authorized to analyze.
 sessions:

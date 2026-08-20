@@ -83,14 +83,17 @@ derived Parquet files alone are not sufficient for that purpose.
 
 1. Clone the private code repository.
 2. Copy `configs/sessions.template.yaml` to `configs/sessions.local.yaml`.
-3. Copy `configs/rois.template.yaml` to `configs/rois.local.yaml`.
+3. Copy `configs/rois.template.yaml` to `configs/rois.local.yaml` as the
+   aggregate fallback, and create `configs/rois/<session_id>.yaml` for each
+   annotated session.
 4. Set the local data and stimulus roots, then add only authorized sessions.
 5. Run `setup_env.ps1` and start Jupyter with `start_jupyter.ps1`.
 
-The shared release notebooks load `configs/sessions.local.yaml` explicitly.
-Keep that file local and untracked. Notebook 01/02 use the ROI path configured
-by the local session configuration; the current template names it
-`configs/rois.local.yaml`.
+The release notebooks load the local session configuration explicitly. ROI
+loading prefers `configs/rois/<session_id>.yaml` and falls back to
+`configs/rois.local.yaml`; P9/P13 migrate only the requested session on first
+save and never overwrite an existing session file automatically. Keep local
+configuration and per-session ROI files untracked.
 
 ## Analysis/output boundary
 

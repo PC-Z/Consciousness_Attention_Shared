@@ -100,12 +100,18 @@ annotations/<session_id>/
 └── annotation_notes.md
 ```
 
-The current pipeline still reads an aggregate local
-`configs/rois.local.yaml`. To run an existing notebook, copy only the approved
-session entry into that local file. When a new ROI version is used, rerun P10
-and P11 and save the resulting behavior output under a clearly named analysis
-version. Record the annotation filename, code tag, and rerun date in
-`annotation_notes.md` or the data manifest.
+The local pipeline prefers one ROI file per session:
+`configs/rois/<session_id>.yaml`. If that file is absent, it falls back to the
+aggregate `configs/rois.local.yaml`. P9/P13 create the per-session file on the
+first save by copying only that session's entry from the aggregate file; an
+existing per-session file is never overwritten automatically. This keeps
+annotation changes isolated as more sessions and collaborators are added.
+
+When a new ROI version is used, rerun P10 and P11 and save the resulting
+behavior output under a clearly named analysis version. Record the annotation
+filename, code tag, and rerun date in `annotation_notes.md` or the data
+manifest. Keep `configs/rois.local.yaml` as a controlled fallback/migration
+source rather than editing it for unrelated sessions.
 
 ## Provenance
 

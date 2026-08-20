@@ -76,6 +76,24 @@ class ProjectConfig:
     def reference_video_path(self, label_ms: int) -> Path:
         return self.stimuli_root / self.condition(label_ms).reference_video
 
+    def aggregate_roi_config_path(self) -> Path:
+        """Return the legacy aggregate ROI file used as a read fallback."""
+
+        filename = str(self.behavior.get("roi_config_file", "rois.local.yaml"))
+        return (self.project_root / "configs" / filename).resolve()
+
+    def session_roi_config_path(self, session_id: str) -> Path:
+        """Return the preferred per-session ROI file path."""
+
+        relative_dir = Path(str(self.behavior.get("roi_session_dir", "rois")))
+        return (self.project_root / "configs" / relative_dir / f"{session_id}.yaml").resolve()
+
+    def roi_config_path(self, session_id: str) -> Path:
+        """Prefer a per-session ROI file and fall back to the aggregate file."""
+
+        session_path = self.session_roi_config_path(session_id)
+        return session_path if session_path.is_file() else self.aggregate_roi_config_path()
+
 
 def _resolve(base: Path, value: str) -> Path:
     path = Path(value)

@@ -2,9 +2,10 @@
 
 This repository contains the sanitized Python package and Notebooks 01-04 for
 the attention oddball analysis. It does not contain raw data, stimulus videos,
-calcium matrices, real ROI coordinates, manual pupil anchors, or derived output.
-Authorized data and the current analysis state are distributed separately in
-the controlled data directory described in `docs/shared-data/README.md`.
+calcium matrices, real ROI coordinates, manual pupil anchors, or derived
+output. Authorized data and the current analysis state are distributed
+separately in the controlled data directory described in
+`docs/shared-data/README.md`.
 
 ## Quick start
 
@@ -18,10 +19,13 @@ Copy the configuration templates before opening a notebook:
 ```powershell
 Copy-Item configs/sessions.template.yaml configs/sessions.local.yaml
 Copy-Item configs/rois.template.yaml configs/rois.local.yaml
+New-Item -ItemType Directory -Force configs/rois
 ```
 
-Set the local `data_root`, `stimuli_root`, authorized session list, and ROI
-entries. The local configuration files are ignored by Git.
+Set the local `data_root`, `stimuli_root`, and authorized session list. Keep
+the aggregate `configs/rois.local.yaml` as a fallback, and put reviewed
+annotations in `configs/rois/<session_id>.yaml`; the session-specific file is
+preferred automatically. Both local configuration paths are ignored by Git.
 
 Run the notebooks in this order:
 
@@ -40,11 +44,11 @@ Jupyter dependencies are in the `notebook` extra and test dependencies in the
 
 - `main` is reviewed through Pull Requests.
 - Use `analysis/<topic>` or `feature/<topic>` branches.
-- Never commit `*.local.yaml`, data, videos, calcium matrices, outputs, or
-  notebook execution dumps.
+- Never commit `*.local.yaml`, per-session ROI YAML files, data, videos,
+  calcium matrices, outputs, or notebook execution dumps.
 - Every result report records the code tag, session ID, data-manifest version,
   and annotation version.
 
-The owner's complete analysis archive is maintained in a separate private
-repository. This repository receives stable, shareable code releases only.
-See `docs/collaboration.md` for the release and data workflow.
+The owner's complete analysis archive is maintained separately. This
+repository receives stable, shareable code releases only. See
+`docs/collaboration.md` for the release and data workflow.

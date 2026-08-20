@@ -219,9 +219,7 @@ def export_session(
             )
             table.to_parquet(output_dir / f"video_frames_{camera}.parquet", index=False)
 
-    roi_sessions = load_roi_config(
-        config.project_root / "configs" / config.behavior["roi_config_file"]
-    )
+    roi_sessions = load_roi_config(config.roi_config_path(result.session_id))
     session_rois = roi_sessions.get(result.session_id, {})
     if include_behavior and session_rois:
         first_onset = float(result.stimulus_events.iloc[0]["measured_onset_s"])

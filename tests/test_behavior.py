@@ -9,6 +9,7 @@ from attention_alignment.behavior import (
     apply_pupil_quality_control,
     detect_pupil,
     extract_behavior,
+    ensure_session_roi_config,
     interpolate_short_nan_gaps,
     load_roi_config,
     pupil_audit_frame_indices,
@@ -21,6 +22,7 @@ from attention_alignment.behavior import (
     region_to_mapping,
     save_camera_annotation,
     save_pupil_manual_anchor,
+    save_roi_config,
 )
 from attention_alignment.models import TimeTransform
 
@@ -419,3 +421,37 @@ def test_only_short_nan_gaps_are_interpolated():
     result = interpolate_short_nan_gaps(values, max_gap_frames=1)
     assert result[1] == 2.0
     assert np.isnan(result[3:6]).all()
+
+
+def test_session_roi_config_migrates_only_requested_session(tmp_path):
+    aggregate_path = tmp_path / "rois.local.yaml"
+    session_a = {"01": {"eye": {"type": "rectangle", "x": 1}}}
+    session_b = {"01": {"eye": {"type": "rectangle", "x": 2}}}
+    save_roi_config(
+        aggregate_path,
+        {"session_a": session_a, "session_b": session_b},
+    )
+
+    session_path = ensure_session_roi_config(
+        tmp_path / "rois" / "session_a.yaml",
+        "session_a",
+        aggregate_path,
+    )
+
+    assert session_path.exists()
+    assert load_roi_config(session_path) == {"session_a": session_a}
+    assert load_roi_config(aggregate_path) == {
+        "session_a": session_a,
+        "session_b": session_b,
+    }
+
+
+def test_existing_session_roi_config_is_not_rewritten(tmp_path):
+    session_path = tmp_path / "rois" / "session_a.yaml"
+    save_roi_config(session_path, {"session_a": {"01": {"manual": True}}})
+    before = session_path.read_bytes()
+
+    resolved = ensure_session_roi_config(session_path, "session_a")
+
+    assert resolved == session_path
+    assert session_path.read_bytes() == before

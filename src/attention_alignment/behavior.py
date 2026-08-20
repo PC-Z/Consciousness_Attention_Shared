@@ -330,6 +330,7 @@ class NotebookLandmarkSelector:
 
 def save_roi_config(path: str | Path, sessions: dict[str, object]) -> None:
     target = Path(path)
+    target.parent.mkdir(parents=True, exist_ok=True)
     temporary = target.with_suffix(target.suffix + ".tmp")
     payload = {"schema_version": 1, "sessions": sessions}
     with temporary.open("w", encoding="utf-8", newline="\n") as handle:
@@ -343,6 +344,30 @@ def load_roi_config(path: str | Path) -> dict[str, object]:
     if payload.get("schema_version") != 1:
         raise ValueError("ROI config schema_version must be 1")
     return payload.get("sessions", {})
+
+
+def ensure_session_roi_config(
+    session_path: str | Path,
+    session_id: str,
+    aggregate_path: str | Path | None = None,
+) -> Path:
+    """Create a per-session ROI file, migrating its entry from an aggregate file.
+
+    Existing per-session files are never rewritten. When a session file does not
+    exist, only the requested session entry is copied from ``aggregate_path``;
+    this keeps future annotation edits isolated between collaborators.
+    """
+
+    target = Path(session_path)
+    if target.is_file():
+        return target
+    sessions: dict[str, object] = {}
+    fallback = Path(aggregate_path) if aggregate_path is not None else None
+    if fallback is not None and fallback.is_file():
+        sessions = load_roi_config(fallback)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    save_roi_config(target, {session_id: sessions.get(session_id, {})})
+    return target
 
 
 def save_camera_annotation(

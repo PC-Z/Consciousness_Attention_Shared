@@ -9,4 +9,5 @@ __pycache__/
 outputs/*
 !outputs/.gitkeep
 configs/*.local.yaml
+configs/rois/*.yaml
 docs/*.local.yaml
