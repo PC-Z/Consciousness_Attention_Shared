@@ -1,0 +1,31 @@
+# Copy this file to configs/rois.local.yaml and fill it with reviewed ROIs.
+# This file is intentionally a shape-only template: it contains no experiment data.
+schema_version: 1
+sessions:
+  replace_with_session_id:
+    "01":
+      reference_frame_index: 0
+      eye:
+        type: polygon
+        vertices: []
+      movement:
+        type: polygon
+        vertices: []
+      pupil_seed:
+        type: polygon
+        vertices: []
+      eye_landmarks: {}
+      pupil_threshold: null
+    "02":
+      reference_frame_index: 0
+      eye:
+        type: polygon
+        vertices: []
+      movement:
+        type: polygon
+        vertices: []
+      pupil_seed:
+        type: polygon
+        vertices: []
+      eye_landmarks: {}
+      pupil_threshold: null

@@ -1,0 +1,67 @@
+# Copy this file to configs/sessions.local.yaml and edit it locally.
+# sessions.local.yaml is ignored by Git and must never contain shared credentials.
+schema_version: 1
+
+# Use paths visible on the collaborator's machine. Relative paths are resolved
+# relative to this repository; absolute paths are also supported.
+workspace_root: ../..
+data_root: C:/path/to/attention-data
+stimuli_root: C:/path/to/attention-stimuli
+output_root: ../outputs
+
+stimulus:
+  cluster_gap_s: 0.010
+  groups_per_phase: 100
+  items_per_group: 5
+  phase_names: [train, test]
+  angle_degrees: {A: 0, B: 90, C: 45}
+  conditions:
+    500:
+      expected_stripe_s: 1.0
+      expected_gray_s: 0.5
+      expected_group_gap_s: 6.5
+      onset_tolerance_s: 0.35
+      gray_tolerance_s: 0.30
+      order_file: test_stimuli_500ms_order_list.txt
+      reference_video: oddball_stimuli_train_test_500ms.mp4
+    1000:
+      expected_stripe_s: 2.0
+      expected_gray_s: 1.0
+      expected_group_gap_s: 7.0
+      onset_tolerance_s: 0.45
+      gray_tolerance_s: 0.35
+      order_file: order_list_1000ms.txt
+      reference_video: oddball_stimuli_train_test_1000ms.mp4
+
+calcium:
+  file: wholebrain_output_after_rejection.mat
+  default_dataset: whole_trace_dff
+  datasets:
+    - whole_trace_dff
+    - whole_trace_nmf_matched
+    - whole_trace_ori
+    - whole_center
+
+ephys:
+  stream: "02"
+  dat_file: 02-0.dat
+  metadata_file: 02.json
+  record_dtype: "<i8,<f4,<f4,<f4,<f4"
+  tick_hz: 10000000
+
+behavior:
+  cameras: ["01", "02"]
+  max_interpolation_gap_s: 0.5
+  pupil_boundary_points: 32
+  pupil_qc_window_s: 0.5
+  landmark_reanchor_interval_frames: 30
+  exclude_review_from_analysis: true
+  use_stabilized_eye_roi: false
+  max_manual_pupil_anchors: 100
+  manual_anchor_influence_frames: 60
+  roi_config_file: rois.local.yaml
+
+# Add only the sessions the collaborator is authorized to analyze.
+sessions:
+  - id: replace_with_session_id
+    condition_label_ms: 1000

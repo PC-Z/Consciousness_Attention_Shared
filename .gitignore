@@ -1,0 +1,12 @@
+.envs/
+.runtime/
+tmp/
+*.egg-info/
+__pycache__/
+.pytest_cache/
+.coverage
+.ipynb_checkpoints/
+outputs/*
+!outputs/.gitkeep
+configs/*.local.yaml
+docs/*.local.yaml
